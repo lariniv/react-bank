@@ -1,23 +1,60 @@
 import { createContext, useContext, useReducer } from "react";
 
-interface AuthState {
-  token: string | null;
-  user: {
-    name: string;
-    id: number;
-  };
+interface User {
+  email: string | null;
+  id: number | null;
+  password: string | null;
+  isConfirm: boolean;
 }
 
-type Action = { type: "LOGIN" | "LOGOUT" };
+interface AuthState {
+  token: string | null;
+  user: User;
+}
+
+type Action = {
+  type: "LOGIN" | "LOGOUT";
+  email?: string;
+  password?: string;
+  id?: number;
+  isConfirm?: boolean;
+};
+
+const tokenGeneration = () => {
+  return (
+    String(new Date().getTime()) +
+    ALPHABET[Math.floor(Math.random() * ALPHABET.length)] +
+    ALPHABET[Math.floor(Math.random() * ALPHABET.length)] +
+    ALPHABET[Math.floor(Math.random() * ALPHABET.length)]
+  );
+};
+
+const ALPHABET: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 const AuthReducer = (state: AuthState, action: Action) => {
   switch (action.type) {
     case "LOGIN":
-      state.token = "default token";
-      return { ...state };
+      if (!state.token) {
+        state.token = tokenGeneration();
+      }
+      if (action.email) {
+        state.user.email = action.email;
+      }
+      if (action.password) {
+        state.user.password = action.password;
+      }
+      if (action.id) {
+        state.user.id = action.id;
+      }
+      if (action.isConfirm) {
+        state.user.isConfirm = action.isConfirm;
+      }
+      console.log(state);
+      return state;
     case "LOGOUT":
       state.token = null;
-      return { ...state };
+      return state;
+
     default:
       return state;
   }
@@ -37,8 +74,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [state, dispatch] = useReducer(AuthReducer, {
     token: null,
     user: {
-      name: "name",
-      id: 1,
+      email: null,
+      id: null,
+      password: null,
+      isConfirm: false,
     },
   });
 
