@@ -24,6 +24,9 @@ class Code {
 
   static createCode = (email) => {
     const code = new Code(email)
+    setTimeout(() => {
+      Code.deleteCode(email)
+    }, 1000 * 60 * 60 * 24)
     this.#list.push(code)
   }
 
@@ -35,6 +38,12 @@ class Code {
     return (
       this.#list.find((item) => item.email === email) ||
       false
+    )
+  }
+
+  static deleteCode = (email) => {
+    this.#list = this.#list.filter(
+      (item) => item.email !== email,
     )
   }
 }

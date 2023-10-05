@@ -8,7 +8,7 @@ import { useAuth } from "../../types/AuthContext";
 import { ErrorObject } from "../../types/ErrorObject";
 import "./index.css";
 
-const SignUp = () => {
+const SignIn = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [alert, setAlert] = useState<string>("");
@@ -24,7 +24,13 @@ const SignUp = () => {
 
   const navigation = useNavigate();
 
-  const { dispatch } = useAuth();
+  const { state, dispatch } = useAuth();
+
+  useEffect(() => {
+    if (!state.user.isConfirm && state.token) {
+      navigation("/signup-confirm");
+    }
+  }, []);
 
   const checkEmailValidity = useMemo(() => {
     return REG_EXP.EMAIL.test(email);
@@ -42,11 +48,11 @@ const SignUp = () => {
 
   const handleSubmit = async () => {
     if (password.length < 8) {
-      setPasswordErr({ result: false, message: "Password is too short" });
+      setPasswordErr({ result: false, message: "Enter valid password" });
     } else {
       setPasswordErr({
         result: checkPasswordValidity,
-        message: checkPasswordValidity ? "" : "Password is too weak",
+        message: checkPasswordValidity ? "" : "Enter valid password",
       });
     }
 
@@ -58,9 +64,9 @@ const SignUp = () => {
     console.log("About to fetch");
 
     try {
-      if (emailErr.result || passwordErr.result) {
+      if (emailErr.result && passwordErr.result) {
         console.log("About to fetch");
-        const res = await fetch("http://localhost:4000/signup", {
+        const res = await fetch("http://localhost:4000/signin", {
           method: "POST",
           headers: {
             "content-type": "application/json",
@@ -70,16 +76,8 @@ const SignUp = () => {
 
         const data = await res.json();
 
-        console.log("Cardd");
-
         if (res.ok) {
-          dispatch({
-            type: "LOGIN",
-            email: data.user.email,
-            password: data.user.password,
-            id: data.user.id,
-          });
-
+          dispatch({ type: "LOGIN", ...data.userData });
           setPasswordErr({
             result: true,
             message: "",
@@ -92,13 +90,14 @@ const SignUp = () => {
 
           setAlert("");
           setIsDisabled(false);
-          navigation("/signup-confirm");
+          navigation("/balance");
         } else {
           setAlert(data.message);
           setIsDisabled(true);
         }
       }
     } catch (err: any) {
+      console.log(err);
       if (err.message) {
         setAlert(err.message);
         setIsDisabled(true);
@@ -114,8 +113,8 @@ const SignUp = () => {
 
       <main className="main">
         <div className="heading">
-          <h2 className="heading__title">Sign up</h2>
-          <p className="heading__text">Choose a registration method</p>
+          <h2 className="heading__title">Sign in</h2>
+          <p className="heading__text">Select login method</p>
         </div>
 
         <Input
@@ -132,9 +131,9 @@ const SignUp = () => {
           error={passwordErr}
         />
         <div>
-          Already have an account?{" "}
-          <Link to="/signin" className="signup-link">
-            Sign in
+          Forgot your password?{" "}
+          <Link to="/recovery" className="signup-link">
+            Restore
           </Link>
         </div>
         <Button
@@ -155,4 +154,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;

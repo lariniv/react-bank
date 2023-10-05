@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import BackBtn from "../../container/BackBtn";
 import Button from "../../container/Button";
 import Input from "../../container/Input";
@@ -69,6 +69,10 @@ const SignUpConfirm = () => {
   const handleSubmit = async () => {
     try {
       if (checkCodeValidity && Number(code) === res) {
+        setCodeErr({
+          result: true,
+          message: "",
+        });
         const response = await fetch(
           "http://localhost:4000/signup-confirm-code",
           {
@@ -88,6 +92,8 @@ const SignUpConfirm = () => {
         } else {
           setAlert(data.message);
         }
+      } else {
+        setCodeErr({ result: false, message: "Enter valid code" });
       }
     } catch (err: any) {
       if (err.message) {

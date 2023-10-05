@@ -6,6 +6,10 @@ import WelcomePage from "./page/WelcomePage";
 import SignUp from "./page/SignUp";
 import PrivateRoute from "./component/PrivateRoute";
 import SignUpConfirm from "./page/SignUpConfirm";
+import SignIn from "./page/SignIn";
+import Recovery from "./page/Recovery";
+import RecoveryConfirm from "./page/RecoveryConfirm";
+import Balance from "./page/Balance";
 
 function App() {
   return (
@@ -33,6 +37,38 @@ function App() {
             element={
               <PrivateRoute>
                 <SignUpConfirm />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="signin"
+            element={
+              <AuthRoute>
+                <SignIn />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="recovery"
+            element={
+              <AuthRoute>
+                <Recovery />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="recovery-confirm"
+            element={
+              <AuthRoute>
+                <RecoveryConfirm />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="balance"
+            element={
+              <PrivateRoute>
+                <Balance />
               </PrivateRoute>
             }
           />

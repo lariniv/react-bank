@@ -84,6 +84,7 @@ router.post('/signup-confirm-code', (req, res) => {
       })
     } else {
       const user = UserClass.findUserByEmail(email)
+
       if (!user) {
         return res.status(400).json({
           message: "User with such email doesn't exist",
@@ -97,6 +98,7 @@ router.post('/signup-confirm-code', (req, res) => {
           message: 'Failed to confirm',
         })
       } else {
+        Code.deleteCode(email)
         return res.status(200).json({
           isConfirm: true,
         })

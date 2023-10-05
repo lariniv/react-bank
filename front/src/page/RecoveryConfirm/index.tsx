@@ -1,44 +1,49 @@
 import { useState, useMemo, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import BackBtn from "../../container/BackBtn";
 import Button from "../../container/Button";
 import Input from "../../container/Input";
-import { REG_EXP } from "../../shared/RegExp";
-import { useAuth } from "../../types/AuthContext";
 import { ErrorObject } from "../../types/ErrorObject";
+import { REG_EXP } from "../../shared/RegExp";
 import "./index.css";
+import { useAuth } from "../../types/AuthContext";
 
-const SignUp = () => {
-  const [email, setEmail] = useState<string>("");
+const RecoveryConfirm = () => {
+  const [code, setCode] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [alert, setAlert] = useState<string>("");
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
-  const [emailErr, setEmailErr] = useState<ErrorObject>({
+
+  const [codeErr, setCodeErr] = useState<ErrorObject>({
     result: true,
     message: "",
   });
+
   const [passwordErr, setPasswordErr] = useState<ErrorObject>({
     result: true,
     message: "",
   });
 
-  const navigation = useNavigate();
-
-  const { dispatch } = useAuth();
-
-  const checkEmailValidity = useMemo(() => {
-    return REG_EXP.EMAIL.test(email);
-  }, [email]);
+  const { state, dispatch } = useAuth();
 
   const checkPasswordValidity = useMemo(() => {
     return REG_EXP.PASSWORD.test(password);
   }, [password]);
 
+  const checkCodeValidity = useMemo(() => {
+    if (code.length < 6) {
+      return false;
+    }
+    return true;
+  }, [code]);
+
   useEffect(() => {
-    if (checkPasswordValidity || checkEmailValidity) {
+    if (checkPasswordValidity || checkCodeValidity) {
       setIsDisabled(false);
     }
-  }, [password, email]);
+  }, [code, password]);
+
+  const navigation = useNavigate();
 
   const handleSubmit = async () => {
     if (password.length < 8) {
@@ -50,52 +55,45 @@ const SignUp = () => {
       });
     }
 
-    setEmailErr({
-      result: checkEmailValidity,
-      message: checkEmailValidity ? "" : "Enter proper email",
+    setCodeErr({
+      result: checkCodeValidity,
+      message: checkCodeValidity ? "" : "Enter valid code",
     });
 
-    console.log("About to fetch");
-
     try {
-      if (emailErr.result || passwordErr.result) {
-        console.log("About to fetch");
-        const res = await fetch("http://localhost:4000/signup", {
+      if (checkCodeValidity && checkPasswordValidity) {
+        const res = await fetch("http://localhost:4000/recovery-confirm", {
           method: "POST",
           headers: {
             "content-type": "application/json",
           },
-          body: JSON.stringify({ email: email, password: password }),
+          body: JSON.stringify({
+            code: code,
+            newPassword: password,
+            email: state.user.email,
+          }),
         });
 
         const data = await res.json();
-
-        console.log("Cardd");
-
         if (res.ok) {
-          dispatch({
-            type: "LOGIN",
-            email: data.user.email,
-            password: data.user.password,
-            id: data.user.id,
-          });
-
           setPasswordErr({
             result: true,
             message: "",
           });
+          setAlert("");
 
-          setEmailErr({
+          setCodeErr({
             result: true,
             message: "",
           });
 
-          setAlert("");
-          setIsDisabled(false);
-          navigation("/signup-confirm");
+          dispatch({ type: "LOGIN", ...data.user });
+
+          console.log(state);
+
+          navigation("/balance");
         } else {
           setAlert(data.message);
-          setIsDisabled(true);
         }
       }
     } catch (err: any) {
@@ -107,23 +105,19 @@ const SignUp = () => {
   };
 
   return (
-    <div className="signup">
+    <div className="recovery">
       <header className="header">
         <BackBtn />
       </header>
 
       <main className="main">
         <div className="heading">
-          <h2 className="heading__title">Sign up</h2>
-          <p className="heading__text">Choose a registration method</p>
+          <h2 className="heading__title">Recover password</h2>
+          <p className="heading__text">Choose a recovery method</p>
         </div>
 
-        <Input
-          name="Email"
-          value={email}
-          setValue={setEmail}
-          error={emailErr}
-        />
+        <Input name="Code" value={code} setValue={setCode} error={codeErr} />
+
         <Input
           name="Password"
           isPassword
@@ -131,14 +125,9 @@ const SignUp = () => {
           setValue={setPassword}
           error={passwordErr}
         />
-        <div>
-          Already have an account?{" "}
-          <Link to="/signin" className="signup-link">
-            Sign in
-          </Link>
-        </div>
+
         <Button
-          text="Continue"
+          text="Send code"
           type="submit"
           disabled={isDisabled}
           action={() => handleSubmit()}
@@ -155,4 +144,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default RecoveryConfirm;
