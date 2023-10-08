@@ -28,3 +28,17 @@
 .disabled:hover {
   cursor: default;
 }
+
+.button--outline {
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 16px;
+  background: #fff;
+}
+
+.button--outline-red {
+  border: 1px solid var(--red);
+  color: var(--red);
+  padding: 16px;
+  background: #fff;
+}

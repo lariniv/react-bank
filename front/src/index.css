@@ -3,8 +3,24 @@
   --secondary: #939199;
   --border: #e9e8eb;
   --red: #f23152;
+  --text: #f3f5ff;
+  --blue: #5b94e9;
+  --green: #24b277;
 }
 
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+  border-radius: 12px;
+}
+
+.splitter {
+  height: 1px;
+  width: 100%;
+  background-color: #e9e8eb;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",

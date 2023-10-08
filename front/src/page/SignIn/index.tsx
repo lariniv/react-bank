@@ -44,7 +44,7 @@ const SignIn = () => {
     if (checkPasswordValidity || checkEmailValidity) {
       setIsDisabled(false);
     }
-  }, [password, email]);
+  }, [checkPasswordValidity, checkEmailValidity]);
 
   const handleSubmit = async () => {
     if (password.length < 8) {
@@ -60,8 +60,6 @@ const SignIn = () => {
       result: checkEmailValidity,
       message: checkEmailValidity ? "" : "Enter proper email",
     });
-
-    console.log("About to fetch");
 
     try {
       if (emailErr.result && passwordErr.result) {
@@ -95,6 +93,9 @@ const SignIn = () => {
           setAlert(data.message);
           setIsDisabled(true);
         }
+      } else {
+        setAlert("Fill in all the fields");
+        setIsDisabled(true);
       }
     } catch (err: any) {
       console.log(err);
@@ -118,12 +119,14 @@ const SignIn = () => {
         </div>
 
         <Input
+          type="email"
           name="Email"
           value={email}
           setValue={setEmail}
           error={emailErr}
         />
         <Input
+          type="password"
           name="Password"
           isPassword
           value={password}

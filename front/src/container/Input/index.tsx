@@ -4,21 +4,26 @@ import { ErrorObject } from "../../types/ErrorObject";
 
 const Input: React.FC<{
   name: string;
+  type: string;
   isPassword?: boolean;
   value: string;
   setValue: (newValue: string) => void;
   error: ErrorObject;
-}> = ({ name, isPassword, value, setValue, error }) => {
+}> = ({ name, isPassword, value, setValue, error, type }) => {
   const [hide, setHide] = useState<boolean>(true);
 
   let placeholder;
+  let isNumber = false;
   let handleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-  switch (name.toLowerCase()) {
+  switch (type.toLowerCase()) {
     case "email":
       placeholder = "example@gmail.com";
       break;
     case "code":
       placeholder = "123456";
+      break;
+    case "number":
+      placeholder = "$0";
       break;
     case "password":
       placeholder = "Password";

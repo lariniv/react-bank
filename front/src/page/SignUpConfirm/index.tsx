@@ -30,8 +30,10 @@ const SignUpConfirm = () => {
       });
 
       const data = await response.json();
+
       if (response.ok) {
         setRes(data.code);
+        console.log(data.code);
       } else {
         setAlert(data.message);
       }
@@ -64,7 +66,7 @@ const SignUpConfirm = () => {
     } else {
       setIsDisabled(true);
     }
-  }, [code]);
+  }, [checkCodeValidity]);
 
   const handleSubmit = async () => {
     try {
@@ -80,7 +82,11 @@ const SignUpConfirm = () => {
             headers: {
               "content-type": "application/json",
             },
-            body: JSON.stringify({ isConfirm: true, email: state.user.email }),
+            body: JSON.stringify({
+              isConfirm: true,
+              email: state.user.email,
+              token: state.token,
+            }),
           }
         );
 
@@ -116,7 +122,13 @@ const SignUpConfirm = () => {
           <p className="heading__text">Write the code you received</p>
         </div>
 
-        <Input name="Code" value={code} setValue={setCode} error={codeErr} />
+        <Input
+          name="Code"
+          value={code}
+          setValue={setCode}
+          error={codeErr}
+          type="code"
+        />
 
         <Button
           text="Confirm"

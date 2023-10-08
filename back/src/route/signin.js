@@ -6,11 +6,13 @@ const { UserClass } = require('../class/user.js')
 
 const { Code } = require('../class/code.js')
 
-UserClass.addUser('faf@gmail.com', 'Testing193!a')
+const {
+  NOTIFICATION_MESS,
+  NOTIFICATION_TYPE,
+} = require('../shared/notifications')
 
 router.post('/signin', (req, res) => {
   try {
-    console.log(UserClass.getList())
     const { email, password } = req.body
 
     console.log(email, password, UserClass.getList())
@@ -21,7 +23,7 @@ router.post('/signin', (req, res) => {
       })
     }
 
-    const user = UserClass.findUserByEmail(email)
+    const user = UserClass.getUserByEmail(email)
 
     if (!user) {
       return res.status(400).json({
@@ -29,6 +31,10 @@ router.post('/signin', (req, res) => {
       })
     } else {
       if (user.password === password) {
+        user.addNotification(
+          NOTIFICATION_TYPE.WARNING,
+          NOTIFICATION_MESS.LOGIN,
+        )
         return res.status(200).json({
           message: 'Signin you in!',
           userData: user,
@@ -54,7 +60,7 @@ router.post('/recovery', (req, res) => {
       })
     }
 
-    const user = UserClass.findUserByEmail(email)
+    const user = UserClass.getUserByEmail(email)
 
     if (!user) {
       return res.status(400).json({
@@ -97,7 +103,7 @@ router.post('/recovery-confirm', (req, res) => {
       })
     }
 
-    const user = UserClass.findUserByEmail(email)
+    const user = UserClass.getUserByEmail(email)
 
     const correctCode = Code.getCode(email)
 
@@ -120,6 +126,11 @@ router.post('/recovery-confirm', (req, res) => {
             message: 'Failed to change password',
           })
         }
+
+        user.addNotification(
+          NOTIFICATION_TYPE.WARNING,
+          NOTIFICATION_MESS.RECOVERY,
+        )
 
         return res.status(200).json({
           user: user,

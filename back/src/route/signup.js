@@ -6,6 +6,8 @@ const { UserClass } = require('../class/user.js')
 
 const { Code } = require('../class/code.js')
 
+const { BalanceClass } = require('../class/balance.js')
+
 router.post('/signup', (req, res) => {
   try {
     const { email, password } = req.body
@@ -16,17 +18,17 @@ router.post('/signup', (req, res) => {
       })
     }
 
-    console.log(UserClass.getList())
-
-    if (UserClass.findUserByEmail(email)) {
+    if (UserClass.getUserByEmail(email)) {
       return res.status(400).json({
         message: 'User with such email already exists',
       })
     } else {
       UserClass.addUser(email, password)
 
+      console.log(UserClass.getUserByEmail(email).token)
+
       return res.status(200).json({
-        user: UserClass.findUserByEmail(email),
+        user: UserClass.getUserByEmail(email),
       })
     }
   } catch (err) {
@@ -76,14 +78,19 @@ router.post('/signup-confirm', (req, res) => {
 
 router.post('/signup-confirm-code', (req, res) => {
   try {
-    const { isConfirm, email } = req.body
+    const { isConfirm, email, token } = req.body
 
     if (!isConfirm) {
       return res.status(400).json({
         message: 'Something went wrong',
       })
     } else {
-      const user = UserClass.findUserByEmail(email)
+      if (!token) {
+        return res.status(400).json({
+          message: 'Failed to obtain token',
+        })
+      }
+      const user = UserClass.getUserByToken(token)
 
       if (!user) {
         return res.status(400).json({
@@ -98,7 +105,10 @@ router.post('/signup-confirm-code', (req, res) => {
           message: 'Failed to confirm',
         })
       } else {
+        BalanceClass.create(token)
+
         Code.deleteCode(email)
+
         return res.status(200).json({
           isConfirm: true,
         })

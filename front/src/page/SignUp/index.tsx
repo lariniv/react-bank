@@ -38,7 +38,7 @@ const SignUp = () => {
     if (checkPasswordValidity || checkEmailValidity) {
       setIsDisabled(false);
     }
-  }, [password, email]);
+  }, [checkPasswordValidity, checkEmailValidity]);
 
   const handleSubmit = async () => {
     if (password.length < 8) {
@@ -58,7 +58,7 @@ const SignUp = () => {
     console.log("About to fetch");
 
     try {
-      if (emailErr.result || passwordErr.result) {
+      if (emailErr.result && passwordErr.result) {
         console.log("About to fetch");
         const res = await fetch("http://localhost:4000/signup", {
           method: "POST",
@@ -70,14 +70,12 @@ const SignUp = () => {
 
         const data = await res.json();
 
-        console.log("Cardd");
-
         if (res.ok) {
           dispatch({
             type: "LOGIN",
             email: data.user.email,
             password: data.user.password,
-            id: data.user.id,
+            token: data.user.token,
           });
 
           setPasswordErr({
@@ -97,6 +95,9 @@ const SignUp = () => {
           setAlert(data.message);
           setIsDisabled(true);
         }
+      } else {
+        setAlert("Fill in all the fields");
+        setIsDisabled(true);
       }
     } catch (err: any) {
       if (err.message) {
@@ -119,12 +120,14 @@ const SignUp = () => {
         </div>
 
         <Input
+          type="email"
           name="Email"
           value={email}
           setValue={setEmail}
           error={emailErr}
         />
         <Input
+          type="password"
           name="Password"
           isPassword
           value={password}

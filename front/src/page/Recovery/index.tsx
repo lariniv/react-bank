@@ -27,7 +27,7 @@ const Recovery = () => {
     if (checkEmailValidity) {
       setIsDisabled(false);
     }
-  }, [email]);
+  }, [checkEmailValidity]);
 
   const navigation = useNavigate();
 
@@ -60,6 +60,9 @@ const Recovery = () => {
         } else {
           setAlert(data.message);
         }
+      } else {
+        setAlert("Fill in all the fields");
+        setIsDisabled(true);
       }
     } catch (err: any) {
       if (err.message) {
@@ -82,6 +85,7 @@ const Recovery = () => {
         </div>
 
         <Input
+          type="email"
           name="Email"
           value={email}
           setValue={setEmail}

@@ -41,7 +41,7 @@ const RecoveryConfirm = () => {
     if (checkPasswordValidity || checkCodeValidity) {
       setIsDisabled(false);
     }
-  }, [code, password]);
+  }, [checkPasswordValidity, checkCodeValidity]);
 
   const navigation = useNavigate();
 
@@ -95,6 +95,9 @@ const RecoveryConfirm = () => {
         } else {
           setAlert(data.message);
         }
+      } else {
+        setAlert("Fill in all the fields");
+        setIsDisabled(true);
       }
     } catch (err: any) {
       if (err.message) {
@@ -116,9 +119,16 @@ const RecoveryConfirm = () => {
           <p className="heading__text">Choose a recovery method</p>
         </div>
 
-        <Input name="Code" value={code} setValue={setCode} error={codeErr} />
+        <Input
+          type="code"
+          name="Code"
+          value={code}
+          setValue={setCode}
+          error={codeErr}
+        />
 
         <Input
+          type="password"
           name="Password"
           isPassword
           value={password}

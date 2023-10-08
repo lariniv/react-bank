@@ -43,10 +43,12 @@
 
 .form__label {
   font-size: 14px;
-  font-size: #1d1d1f;
+  color: #1d1d1f;
+  font-weight: 500;
 }
 
 .form__input {
+  background-color: #fff;
   width: 100%;
   padding: 20px 16px;
   border-radius: 18px;

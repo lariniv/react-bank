@@ -2,7 +2,6 @@ import { createContext, useContext, useReducer } from "react";
 
 interface User {
   email: string | null;
-  id: number | null;
   password: string | null;
   isConfirm: boolean;
 }
@@ -16,26 +15,21 @@ type Action = {
   type: "LOGIN" | "LOGOUT";
   email?: string;
   password?: string;
-  id?: number;
+  token?: string;
   isConfirm?: boolean;
 };
-
-const tokenGeneration = () => {
-  return (
-    String(new Date().getTime()) +
-    ALPHABET[Math.floor(Math.random() * ALPHABET.length)] +
-    ALPHABET[Math.floor(Math.random() * ALPHABET.length)] +
-    ALPHABET[Math.floor(Math.random() * ALPHABET.length)]
-  );
-};
-
-const ALPHABET: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 const AuthReducer = (state: AuthState, action: Action) => {
   switch (action.type) {
     case "LOGIN":
-      if (!state.token) {
-        state.token = tokenGeneration();
+      const token = window.localStorage.getItem("token");
+      if (token) {
+        state.token = token;
+      }
+      if (action.token) {
+        window.localStorage.removeItem("token");
+        window.localStorage.setItem("token", action.token);
+        state.token = action.token;
       }
       if (action.email) {
         state.user.email = action.email;
@@ -43,11 +37,11 @@ const AuthReducer = (state: AuthState, action: Action) => {
       if (action.password) {
         state.user.password = action.password;
       }
-      if (action.id) {
-        state.user.id = action.id;
-      }
+
       if (action.isConfirm) {
         state.user.isConfirm = action.isConfirm;
+      } else {
+        state.user.isConfirm = false;
       }
       console.log(state);
       return state;
@@ -55,7 +49,6 @@ const AuthReducer = (state: AuthState, action: Action) => {
       state.token = null;
       state.user = {
         email: null,
-        id: null,
         password: null,
         isConfirm: false,
       };
@@ -80,10 +73,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [state, dispatch] = useReducer(AuthReducer, {
     token: null,
     user: {
-      email: null,
-      id: null,
-      password: null,
-      isConfirm: false,
+      email: "faf@gmail.com",
+      password: "Testing193!a",
+      isConfirm: true,
     },
   });
 

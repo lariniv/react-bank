@@ -10,6 +10,10 @@ import SignIn from "./page/SignIn";
 import Recovery from "./page/Recovery";
 import RecoveryConfirm from "./page/RecoveryConfirm";
 import Balance from "./page/Balance";
+import Settings from "./page/Settings";
+import Send from "./page/Send";
+import Receive from "./page/Receive";
+import Notification from "./page/Notification";
 
 function App() {
   return (
@@ -69,6 +73,38 @@ function App() {
             element={
               <PrivateRoute>
                 <Balance />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="settings"
+            element={
+              <PrivateRoute>
+                <Settings />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="send"
+            element={
+              <PrivateRoute>
+                <Send />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="receive"
+            element={
+              <PrivateRoute>
+                <Receive />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="notification"
+            element={
+              <PrivateRoute>
+                <Notification />
               </PrivateRoute>
             }
           />
