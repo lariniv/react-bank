@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import getHoursAndMinute from "../../shared/GetHoursAndMinute";
 import { useAuth } from "../../types/AuthContext";
 import { TransactionsObject } from "../../types/TransactionObject";
 import "./index.css";
@@ -24,7 +25,6 @@ const Balance = () => {
       const data = await res.json();
 
       if (res.ok) {
-        console.log(data.balance, data.transactionsList);
         setBalance(data.balance);
         setTransactions(data.transactionsList);
       } else {
@@ -36,7 +36,6 @@ const Balance = () => {
   };
 
   useEffect(() => {
-    console.log(transactions);
     fetchData();
   }, []);
 
@@ -84,7 +83,7 @@ const Balance = () => {
         </div>
       </div>
 
-      <main className="main">
+      <main className="main offset-top">
         <div className="transactions-list">
           {transactions.reverse().map((item) => {
             let icon = "";
@@ -99,7 +98,9 @@ const Balance = () => {
                 name = "Coinbase";
               } else {
                 if (item.address) {
-                  name = item.address;
+                  icon = "transaction__icon--user";
+                  name = item.address?.split("@")[0] as string;
+                  name = name[0].toUpperCase() + name.slice(1);
                 }
               }
             } else if (item.type === "send") {
@@ -109,19 +110,14 @@ const Balance = () => {
             }
 
             if (item.date) {
-              const convertedDate = new Date(item.date);
-              const hours = convertedDate.getHours();
-              const minutes = convertedDate.getMinutes();
-              let minutesSting;
-              if (minutes < 10) {
-                minutesSting = "0" + String(minutes);
-              } else {
-                minutesSting = String(minutes);
-              }
-              time = String(hours) + ":" + minutesSting;
+              time = getHoursAndMinute(item.date);
             }
             return (
-              <div className="transaction" key={item.id}>
+              <Link
+                to={`/transaction/${state.token}/${item.id}`}
+                className="transaction"
+                key={item.id}
+              >
                 <div className="transaction__wrapper">
                   <div className={`transaction__icon ${icon}`} />
 
@@ -154,7 +150,7 @@ const Balance = () => {
                       : "0"}
                   </span>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>

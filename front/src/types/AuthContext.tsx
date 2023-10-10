@@ -43,7 +43,6 @@ const AuthReducer = (state: AuthState, action: Action) => {
       } else {
         state.user.isConfirm = false;
       }
-      console.log(state);
       return state;
     case "LOGOUT":
       state.token = null;

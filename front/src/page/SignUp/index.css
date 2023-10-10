@@ -14,11 +14,6 @@
 .signup-link {
   color: var(--primary);
 }
-.main {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
 
 .form {
   display: flex;

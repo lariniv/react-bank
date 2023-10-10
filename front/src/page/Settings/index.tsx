@@ -111,6 +111,10 @@ const Settings = () => {
               message: "",
             });
 
+            setEmail("");
+
+            setEmailPassword("");
+
             setIsDisabledEmail(false);
           } else {
             setIsDisabledEmail(true);
@@ -166,6 +170,10 @@ const Settings = () => {
               result: true,
               message: "",
             });
+
+            setNewPassword("");
+
+            setOldPassword("");
 
             setIsDisabledPassword(false);
           } else {
@@ -235,7 +243,7 @@ const Settings = () => {
           <div className="splitter" />
         </div>
 
-        <div className="settings__container">
+        <div className="container">
           <h2 className="settings-heading__title">Change password</h2>
 
           <Input

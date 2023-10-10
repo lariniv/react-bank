@@ -11,9 +11,16 @@
 ::-webkit-scrollbar {
   width: 4px;
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--secondary);
   border-radius: 12px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
 .splitter {

@@ -34,6 +34,8 @@ const receive = require('./receive')
 
 const notification = require('./notification')
 
+const transaction = require('./transaction')
+
 // Підключіть інші файли роутів, якщо є
 
 // Об'єднайте файли роутів за потреби
@@ -50,6 +52,8 @@ router.use('/', balance)
 router.use('/', receive)
 
 router.use('/', notification)
+
+router.use('/', transaction)
 
 // Використовуйте інші файли роутів, якщо є
 

@@ -31,6 +31,14 @@ class UserClass {
     this.transactions.push(transaction)
   }
 
+  getTransactionById = (id) => {
+    return (
+      this.transactions.find(
+        (item) => item.id === Number(id),
+      ) || false
+    )
+  }
+
   addNotification = (type, text) => {
     const notification = new NotificationClasss(type, text)
     setTimeout(() => {

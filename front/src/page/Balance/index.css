@@ -12,7 +12,7 @@
   overflow: hidden;
 }
 
-.main {
+.offset-top {
   padding-top: 20%;
 }
 
@@ -131,6 +131,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  text-decoration: none;
 }
 
 .transaction__wrapper {
@@ -154,6 +155,7 @@
 }
 
 .transaction__title {
+  color: #000;
   font-size: 16px;
   font-weight: 600;
 }

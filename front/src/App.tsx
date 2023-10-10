@@ -14,6 +14,7 @@ import Settings from "./page/Settings";
 import Send from "./page/Send";
 import Receive from "./page/Receive";
 import Notification from "./page/Notification";
+import Transaction from "./page/Transacation";
 
 function App() {
   return (
@@ -105,6 +106,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Notification />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/transaction/:token/:id"
+            element={
+              <PrivateRoute>
+                <Transaction />
               </PrivateRoute>
             }
           />
