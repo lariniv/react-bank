@@ -9,8 +9,6 @@ router.post('/balance', (req, res) => {
   try {
     const { token } = req.body
 
-    console.log(token)
-
     if (!token) {
       return res.status(400).json({
         mesasge: 'Failed to obtain token',

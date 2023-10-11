@@ -15,8 +15,6 @@ router.post('/signin', (req, res) => {
   try {
     const { email, password } = req.body
 
-    console.log(email, password, UserClass.getList())
-
     if (!email || !password) {
       return res.status(400).json({
         message: 'Fill in all the fields',

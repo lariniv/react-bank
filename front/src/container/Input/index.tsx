@@ -13,7 +13,6 @@ const Input: React.FC<{
   const [hide, setHide] = useState<boolean>(true);
 
   let placeholder;
-  let isNumber = false;
   let handleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   switch (type.toLowerCase()) {
     case "email":

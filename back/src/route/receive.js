@@ -54,7 +54,6 @@ router.post('/receive', (req, res) => {
       NOTIFICATION_TYPE.ANNOUNCEMENT,
       NOTIFICATION_MESS.RECEIVE,
     )
-    console.log(user.transactions)
     return res.status(200).json({
       result: true,
     })

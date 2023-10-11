@@ -30,7 +30,7 @@ const SignIn = () => {
     if (!state.user.isConfirm && state.token) {
       navigation("/signup-confirm");
     }
-  }, []);
+  }, [state.user.isConfirm, state.token]);
 
   const checkEmailValidity = useMemo(() => {
     return REG_EXP.EMAIL.test(email);

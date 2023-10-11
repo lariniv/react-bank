@@ -63,8 +63,6 @@ const Settings = () => {
     checkOldPasswordValidity,
   ]);
 
-  useEffect(() => console.log(state), []);
-
   const { state, dispatch } = useAuth();
   const navigate = useNavigate();
 
